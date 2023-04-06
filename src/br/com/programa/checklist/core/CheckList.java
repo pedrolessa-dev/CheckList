@@ -1,3 +1,4 @@
+package br.com.programa.checklist.core;
 
 public class CheckList {
 	private String descricao;
