@@ -1,13 +1,10 @@
-
 public class CheckList {
 	private String descricao;
 	private boolean concluido;
 	private int pontuacao;
 
 	public CheckList(String descricao, int pontuacao) {
-		super();
 		this.descricao = descricao;
-		this.concluido = false;
 		this.pontuacao = pontuacao;
 	}
 
