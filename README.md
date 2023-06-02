@@ -1,5 +1,6 @@
 # Programa de CheckList
-Um programa java com sistema de pontos, que permite ao usuário:
+Um programa de gerenciamento de tarefas em java, usando JDBC e MySQL para gerenciar o banco de dados.
+Neste sistema, o usuário pode:
 - Cadastrar tarefas;
 - Excluir tarefas;
 - Editar tarefas;

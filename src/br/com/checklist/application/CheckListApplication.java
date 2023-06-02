@@ -1,63 +1,77 @@
-// Programa para gerenciamento de checklist com sistema de pontuação
-// e caixa de seleção para indicar qual tarefa já foi concluída
+// Programa para gerenciamento de tarefas com sistema de pontuação
+package br.com.checklist.application;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-public class Programa {
+import br.com.checklist.model.Tarefa;
+import br.com.checklist.service.TarefaService;
+
+public class CheckListApplication {
 	public static void main(String[] args) {
 
 		// Cria uma lista e declara as variáveis
-		List<CheckList> lista = new ArrayList<CheckList>();
-		Menu menu = Menu.getInstance();
+		List<Tarefa> tarefas = new ArrayList<Tarefa>();
+		TarefaService service = new TarefaService();
+		Tarefa tarefa = new Tarefa();
 		Scanner sc = new Scanner(System.in);
-		int opcaoEscolhida = 1, numeroDaTarefa = 1;
+		int opcaoEscolhida = 1;
 
 		// Exibe menu de opções
 		System.out.println("===================================");
 		System.out.println("Programa de checklist");
-
 		// Loop principal que funciona até que o usuário digite a opção de sair
 		while (opcaoEscolhida != 0) {
 			try {
-				System.out.print(menu.exibirMenu());
+				System.out.print(service.exibirMenu());
 				opcaoEscolhida = sc.nextInt();
 				sc.nextLine(); // adicionado para descartar a entrada inválida
 
 				// Opções do menu que serão executadas de acordo com a escolha do usuário
 				switch (opcaoEscolhida) {
 				case 1:
-					menu.exibirTodasAsTarefas(lista);
+					tarefas = service.exibirTodasAsTarefas();
+					tarefas.stream().forEach(System.out::println);
+					System.out.println("Tarefas concluídas: " + service.getTotalDeTarefasConcluidas() + "/" + tarefas.size());
 					break;
 				case 2:
-					menu.exibirTarefasConcluidas(lista);
+					tarefas = service.exibirTarefasConcluidas();
+					tarefas.stream().forEach(System.out::println);
 					break;
 				case 3:
-					menu.exibirPontuacao(lista);
+					System.out.println("Sua pontuação atual: " + service.exibirPontuacao() + " ponto(s)");
 					break;
 				case 4:
 					System.out.println("Digite a descrição da sua tarefa");
-					String descricao = sc.nextLine();
+					var descricao = sc.nextLine();
 					System.out.println("Digite uma pontuação para essa tarefa");
-					int pontuacao = sc.nextInt();
-					menu.cadastrarTarefa(lista, descricao, pontuacao);
+					var pontuacao = Integer.parseInt(sc.nextLine());
+					service.cadastrarTarefa(new Tarefa(null, descricao, false, pontuacao));
+					System.out.println("Tarefa cadastrada com sucesso!");
 					break;
 				case 5:
 					System.out.println("Digite o número da tarefa que deseja excluir");
-					numeroDaTarefa = sc.nextInt();
-					menu.excluirTarefa(lista, numeroDaTarefa);
+					tarefa.setId(Integer.parseInt(sc.nextLine()));
+					service.excluirTarefa(tarefa);
+					System.out.println("Tarefa " + tarefa.getId() + " foi excluída com sucesso!");
 					break;
 				case 6:
 					System.out.println("Digite o número da tarefa que deseja editar");
-					numeroDaTarefa = sc.nextInt();
-					menu.editarTarefa(lista, numeroDaTarefa);
+					tarefa.setId(Integer.parseInt(sc.nextLine()));
+					System.out.println("Digite a nova descrição desta tarefa");
+					tarefa.setDescricao(sc.nextLine());
+					System.out.println("Digite a nova pontuação desta tarefa");
+					tarefa.setPontuacao(Integer.parseInt(sc.nextLine()));
+					service.editarTarefa(tarefa);
+					System.out.println("Tarefa " + tarefa.getId() + " foi editada com sucesso!");
 					break;
 				case 7:
 					System.out.println("Digite o número da tarefa que deseja marcar como concluída");
-					numeroDaTarefa = sc.nextInt();
-					menu.marcarTarefaComoConcluida(lista, numeroDaTarefa);
+					tarefa.setId(Integer.parseInt(sc.nextLine()));
+					service.marcarTarefaComoConcluida(tarefa);
+					System.out.println("Tarefa " + tarefa.getId() + " foi marcada como concluída!");
 					break;
 				case 0:
 					System.out.println("Saindo do programa...");
@@ -73,6 +87,8 @@ public class Programa {
 				System.out.println("Número inválido, por favor digite um valor numérico válido.");
 			} catch (IndexOutOfBoundsException e) {
 				System.out.println("Índice inválido, por favor digite um índice dentro dos limites da lista.");
+			} catch (RuntimeException e) {
+				System.out.println("Erro: " + e.getMessage());
 			} catch (Exception e) {
 				System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
 				e.printStackTrace();
