@@ -46,11 +46,10 @@ public class CheckListApplication {
 						marcarTarefaComoConcluida();
 						break;
 					}
-				} else if (opcaoEscolhida == 0) {
+				} else if (opcaoEscolhida == 0)
 					System.out.println("Saindo do programa...");
-				} else {
+				else
 					System.out.println("Opção inválida, tente novamente.");
-				}
 			} catch (NumberFormatException | InputMismatchException e) {
 				System.out.println("Entrada inválida, por favor digite um valor numérico válido.");
 			} catch (RuntimeException e) {
