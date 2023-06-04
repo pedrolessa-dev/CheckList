@@ -17,9 +17,9 @@ public class TarefaDAO {
 	}
 
 	public void cadastrarTarefa(Tarefa tarefa) {
-		String sqlInsert = "INSERT INTO tbl_tarefa (descricao, concluido, pontuacao) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO tbl_tarefa (descricao, concluido, pontuacao) VALUES (?, ?, ?)";
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(sqlInsert);
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, tarefa.getDescricao());
 			preparedStatement.setBoolean(2, false);
 			preparedStatement.setInt(3, tarefa.getPontuacao());
@@ -31,19 +31,13 @@ public class TarefaDAO {
 		}
 	}
 
-	public List<Tarefa> listarTarefas(int tipoSelect) {
+	public List<Tarefa> listarTarefas() {
 		List<Tarefa> tarefas = new ArrayList<>();
-		String sqlSelect;
+		String sql = "SELECT * FROM tbl_tarefa";
 		PreparedStatement preparedStatement;
 		ResultSet result;
-		if (tipoSelect == 1)
-			sqlSelect = "SELECT * FROM tbl_tarefa";
-		else if (tipoSelect == 2)
-			sqlSelect = "SELECT * FROM tbl_tarefa WHERE concluido = TRUE";
-		else
-			throw new RuntimeException("Query SQL não encontrada");
 		try {
-			preparedStatement = this.connection.prepareStatement(sqlSelect);
+			preparedStatement = this.connection.prepareStatement(sql);
 			result = preparedStatement.executeQuery();
 			while (result.next()) {
 				int id = result.getInt(1);
@@ -70,9 +64,9 @@ public class TarefaDAO {
 			ResultSet resultSet = selectStatement.executeQuery();
 			if (resultSet.next()) {
 				if (resultSet.getBoolean("concluido"))
-					throw new RuntimeException("Essa tarefa já foi marcada como concluída");
+					throw new RuntimeException("Essa tarefa já foi marcada como concluída.");
 			} else
-				throw new RuntimeException("O número digitado não corresponde a uma tarefa");
+				throw new RuntimeException("O número digitado não corresponde a uma tarefa.");
 			PreparedStatement updateStatement = this.connection.prepareStatement(sqlUpdate);
 			updateStatement.setInt(1, tarefa.getId());
 			updateStatement.executeUpdate();
@@ -85,9 +79,9 @@ public class TarefaDAO {
 	}
 
 	public void editarTarefa(Tarefa tarefa) {
-		String sqlUpdate = "UPDATE tbl_tarefa SET descricao = ?, pontuacao = ? WHERE id = ?";
+		String sql = "UPDATE tbl_tarefa SET descricao = ?, pontuacao = ? WHERE id = ?";
 		try {
-			PreparedStatement preparedStatement = this.connection.prepareStatement(sqlUpdate);
+			PreparedStatement preparedStatement = this.connection.prepareStatement(sql);
 			preparedStatement.setString(1, tarefa.getDescricao());
 			preparedStatement.setInt(2, tarefa.getPontuacao());
 			preparedStatement.setInt(3, tarefa.getId());
@@ -95,7 +89,7 @@ public class TarefaDAO {
 			preparedStatement.close();
 			this.connection.close();
 			if (linhasAfetadas == 0)
-				throw new RuntimeException("O número digitado não corresponde a uma tarefa");
+				throw new RuntimeException("O número digitado não corresponde a uma tarefa.");
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -110,7 +104,7 @@ public class TarefaDAO {
 			preparedStatement.close();
 			this.connection.close();
 			if (linhasAfetadas == 0) {
-				throw new RuntimeException("O número digitado não corresponde a uma tarefa");
+				throw new RuntimeException("O número digitado não corresponde a uma tarefa.");
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

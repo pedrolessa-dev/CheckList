@@ -14,28 +14,9 @@ public class TarefaService {
 		this.connection = new ConnectionFactory();
 	}
 
-	public String exibirMenu() {
-		return """
-				===================================
-				1 - Exibir todas as tarefas
-				2 - Exibir tarefas concluídas
-				3 - Exibir sua pontuação
-				4 - Cadastrar tarefa
-				5 - Excluir tarefa
-				6 - Editar tarefa
-				7 - Marcar tarefa como concluída
-				0 - Sair
-				""";
-	}
-
-	public List<Tarefa> exibirTodasAsTarefas() {
+	public List<Tarefa> exibirTarefas() {
 		Connection conn = this.connection.recuperarConexao();
-		return new TarefaDAO(conn).listarTarefas(1);
-	}
-
-	public List<Tarefa> exibirTarefasConcluidas() {
-		Connection conn = this.connection.recuperarConexao();
-		return new TarefaDAO(conn).listarTarefas(2);
+		return new TarefaDAO(conn).listarTarefas();
 	}
 
 	public int exibirPontuacao() {
@@ -59,11 +40,8 @@ public class TarefaService {
 	}
 
 	public void marcarTarefaComoConcluida(Tarefa tarefa) {
-		if (!tarefa.isConcluido()) {
-			Connection conn = this.connection.recuperarConexao();
-			new TarefaDAO(conn).marcarTarefaComoConcluida(tarefa);
-		} else
-			throw new RuntimeException("Essa tarefa já foi marcada como concluída");
+		Connection conn = this.connection.recuperarConexao();
+		new TarefaDAO(conn).marcarTarefaComoConcluida(tarefa);
 	}
 
 	public int getTotalDeTarefasConcluidas() {
